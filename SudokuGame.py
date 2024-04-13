@@ -4,6 +4,7 @@ import random
 class SudokuGame:
     def __init__(self) -> None:
         self.plateau: list[list[Tile]] = [[Tile() for _ in range(9)] for _ in range(9)]
+        self.possible_values: list[list[list[int]]] = [[[j for j in range(1, 10)] for _ in range(9)] for _ in range(9)]
         
         return
         
@@ -112,13 +113,8 @@ class SudokuGame:
         
         return True
     
-    def solve_board(self, row=0, col=0) -> bool:
-        """Solve the Sudoku board using a backtracking algorithm.
-
-        This function uses a recursive backtracking algorithm to fill the Sudoku board.
-        It tries placing numbers from 1 to 9 in each cell, and if it finds a valid number,
-        it recursively tries to fill the next cell. If it can't find a valid number, it
-        backtracks and tries a different number.
+    def solve_board(self) -> bool:
+        """Solve the Sudoku board using a fill by missing algorithm (I dunno the name so whatever) using the get_legal_values function
 
         Args:
             row (int, optional): The starting row. Defaults to 0.
@@ -128,25 +124,17 @@ class SudokuGame:
             bool: True if the board is successfully filled, False otherwise.
         """
         
-        if row == 9:
-            return True
+        for i in range(9):
+            for j in range(9):
+                values = self.possible_values[i][j]
+                value = random.choice(values)
+                self.plateau[i][j].value = value
+                self.remove_legal_value(i, j, value)  # Remove the value from the row, column, and 3x3 square
+                self.possible_values[i][j] = []  # Clear the possible values for this cell
 
-        if col == 9:
-            return self.solve_board(row + 1, 0)
-
-        if self.plateau[row][col].value != 0:
-            return self.solve_board(row, col + 1)
-
-        for num in range(1, 10):
-            if self.plateau[row][col].can_place_num(num, row, col, self.plateau):
-                self.plateau[row][col].value = num
-                self.plateau[row][col].isStatic = True
-                if self.solve_board(row, col + 1):
-                    return True
-
-            self.plateau[row][col].value = 0
-
-        return False
+        
+        return True
+        
 
     def generate_game(self, difficulty: float) -> bool:
         """Function to select generate a game using the difficulty
@@ -161,19 +149,69 @@ class SudokuGame:
         if not (1 <= difficulty <=4):
             return False
         
-        # First, fill the board
         self.solve_board()
 
-        # Then, remove cells to create a puzzle
-        cells_to_remove = int(81 - 20 - (difficulty ** 2.7))
-        removed_cells = 0
+        # # Then, remove cells to create a puzzle
+        # cells_to_remove = int(81 - 20 - (difficulty ** 2.7))
+        # removed_cells = 0
 
-        while removed_cells < cells_to_remove:
-            row = random.randint(0, 8)
-            col = random.randint(0, 8)
-            if self.plateau[row][col].value != 0:
-                self.plateau[row][col].value = 0
-                self.plateau[row][col].isStatic = False 
-                removed_cells += 1
+        # while removed_cells < cells_to_remove:
+        #     row = random.randint(0, 8)
+        #     col = random.randint(0, 8)
+        #     if self.plateau[row][col].value != 0:
+        #         self.plateau[row][col].value = 0
+        #         self.plateau[row][col].isStatic = False 
+        #         removed_cells += 1
         
         return True
+    
+    def get_legal_values(self, row, col):
+        """Get a list of legal values for the given cell."""
+        legal_values = list(range(1, 10))
+        for i in range(9):
+            # Remove values already present in the same row or column
+            if self.plateau[row][i].value in legal_values:
+                legal_values.remove(self.plateau[row][i].value)
+            if self.plateau[i][col].value in legal_values:
+                legal_values.remove(self.plateau[i][col].value)
+
+        # Remove values already present in the same 3x3 box
+        box_row = (row // 3) * 3
+        box_col = (col // 3) * 3
+        for i in range(box_row, box_row + 3):
+            for j in range(box_col, box_col + 3):
+                if self.plateau[i][j].value in legal_values:
+                    legal_values.remove(self.plateau[i][j].value)
+
+        return legal_values
+    
+    def get_legal_values(self, row, col):
+        """Get a list of legal values for the given cell."""
+        return self.possible_values[row][col]
+    
+    def remove_legal_value(self, row, col, value):
+        """Remove all the values from the row, column and 3x3 square of the given cell"""
+        print(self.possible_values[row][col])
+        # Rows
+        for i in range(9):
+            try:
+                self.possible_values[row][i].remove(value)
+            except:
+                continue
+        
+        # Columns
+        for e in range(9):
+            try:
+                self.possible_values[e][col].remove(value)
+            except:
+                continue
+        
+        # 3x3 square
+        box_row = (row // 3) * 3
+        box_col = (col // 3) * 3
+        for i in range(box_row, box_row + 3):
+            for j in range(box_col, box_col + 3):
+                try:
+                    self.possible_values[i][j].remove(value)
+                except:
+                    continue

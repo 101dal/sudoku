@@ -10,9 +10,7 @@ def printGame():
         print()
     print()
 
-printGame()
-
-jeu.generate_game(1)
-jeu.generate_game(2)
-jeu.generate_game(3)
-jeu.generate_game(4)
+try:
+    jeu.generate_game(1)
+except:
+    printGame()

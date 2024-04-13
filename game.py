@@ -6,6 +6,8 @@ class SudokuGUI:
         self.root = root
         self.root.title("Sudoku Game")
         self.root.geometry("600x600")
+        
+        self.difficulty_levels = {"Easy": 4, "Medium": 3, "Hard": 2} # , "Impossible": 1}
 
         self.game = SudokuGame()
 
@@ -50,7 +52,7 @@ class SudokuGUI:
         # Create the difficulty dropdown
         self.difficulty_var = tk.StringVar(self.root)
         self.difficulty_var.set("Easy")
-        difficulty_options = ["Easy", "Medium", "Hard", "Impossible"]
+        difficulty_options = list(self.difficulty_levels)
         difficulty_dropdown = tk.OptionMenu(self.root, self.difficulty_var, *difficulty_options)
         difficulty_dropdown.grid(row=10, column=0, columnspan=9, pady=(10, 0))
 
@@ -88,7 +90,7 @@ class SudokuGUI:
 
     def new_game(self):
         # Generate a new Sudoku game based on the selected difficulty
-        difficulty_level = {"Easy": 4, "Medium": 3, "Hard": 2, "Impossible": 1}[self.difficulty_var.get()]
+        difficulty_level = self.difficulty_levels[self.difficulty_var.get()]
         
         self.reset_entries()
             
@@ -101,8 +103,10 @@ class SudokuGUI:
 
     def on_entry_change(self, entry, x, y, *args):
         value = entry.get()
-        self.game.set_element(x, y, value)
-        self.update_board()
+        if self.game.set_element(x, y, value):  # Only update the entry if the value is valid
+            entry.configure(fg='black')
+        else:
+            entry.configure(fg='red')
         return
 
 
