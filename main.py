@@ -12,5 +12,7 @@ def printGame():
 
 printGame()
 
-printGame()
-print(jeu.check_board())
+jeu.generate_game(1)
+jeu.generate_game(2)
+jeu.generate_game(3)
+jeu.generate_game(4)

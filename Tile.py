@@ -12,7 +12,7 @@ class Tile:
         
         self.isValid: bool = True
         
-    def setValidity(self, validity: bool) -> None:
+    def set_validity(self, validity: bool) -> None:
         """Set the validity of that tile
 
         Args:
@@ -22,11 +22,37 @@ class Tile:
 
         return
     
-    def setValue(self, value: int) -> bool:
+    def set_value(self, value: int) -> bool:
+        """Sets the value of that Tile
+
+        Args:
+            value (int): The value to be set
+
+        Returns:
+            bool: True if the value has been changed and False otherwise
+        """
         if self.isStatic:
             return True
         
-        if value < 0 or value > 9:
-            self.isValid = False
-            return False
+        return True
+
+    def can_place_num(self, num, row, col, board):
+        # Check the row
+        for i in range(9):
+            if board[row][i].value == num:
+                return False
+
+        # Check the column
+        for i in range(9):
+            if board[i][col].value == num:
+                return False
+
+        # Check the 3x3 grid
+        start_row = row - row % 3
+        start_col = col - col % 3
+        for i in range(3):
+            for j in range(3):
+                if board[i + start_row][j + start_col].value == num:
+                    return False
+
         return True
