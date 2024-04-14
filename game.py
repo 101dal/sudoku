@@ -7,7 +7,7 @@ class SudokuGUI:
         self.root.title("Sudoku Game")
         self.root.geometry("600x600")
         
-        self.difficulty_levels = {"Easy": 4, "Medium": 3, "Hard": 2} # , "Impossible": 1}
+        self.difficulty_levels = {"Easy": 1, "Medium": 2, "Hard": 3, "Impossible": 4}
 
         self.game = SudokuGame()
 

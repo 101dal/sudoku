@@ -136,15 +136,32 @@ class SudokuGame:
 
         if self.plateau[row][col].value != 0:
             return self.solve_board(row, col + 1)
-
-        for num in range(1, 10):
+        
+        
+        random_sequence = list(range(1,10))
+        
+        for _ in range(1, 10):
+            rn = random.randint(0, len(random_sequence) - 1)
+            num = random_sequence[rn]
+            del random_sequence[rn]
             if self.plateau[row][col].can_place_num(num, row, col, self.plateau):
                 self.plateau[row][col].value = num
                 self.plateau[row][col].isStatic = True
                 if self.solve_board(row, col + 1):
                     return True
-
+            
             self.plateau[row][col].value = 0
+            
+
+        # for num in range(1, 10):
+        #     if self.plateau[row][col].can_place_num(num, row, col, self.plateau):
+        #         self.plateau[row][col].value = num
+        #         self.plateau[row][col].isStatic = True
+        #         if self.solve_board(row, col + 1):
+        #             return True
+        #         self.plateau[row][col].value = 0
+        
+
 
         return False
 
@@ -161,21 +178,22 @@ class SudokuGame:
         if not (1 <= difficulty <=4):
             return False
         
-        # Create a pseudo random board from the start
-        for _ in range(10):
+        # Create a pseudo random board from the start with a random value for the first element
+        for _ in range(5):
             random_x = random.randint(0,8)
             random_y = random.randint(0,8)
-            self.plateau[random_y][random_x].value = random.randint(1,9)
-            if not self.check_board():
+            v = random.randint(1,9)
+            if self.plateau[random_y][random_x].can_place_num(v, random_y, random_x, self.plateau):
                 self.plateau[random_y][random_x].value = 0
-            else:
                 self.plateau[random_y][random_x].isStatic = True
         
         # First, fill the board
         self.solve_board()
 
         # Then, remove cells to create a puzzle
-        cells_to_remove = int(81 - 20 - (difficulty ** 2.7))
+        diff_range = {1: [20, 30], 2:[35,45], 3: [45,55], 4: [55,60]}[difficulty]
+        cells_to_remove = random.randint(diff_range[0], diff_range[1])
+        print(cells_to_remove)
         removed_cells = 0
 
         while removed_cells < cells_to_remove:
