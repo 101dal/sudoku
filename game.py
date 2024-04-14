@@ -80,7 +80,7 @@ class SudokuGUI:
 
     def solve_game(self):
         # Solve the Sudoku game
-        self.game.solve_board()
+        self.game.plateau = self.game.solved_board
         self.update_board()
 
     def reset_game(self):

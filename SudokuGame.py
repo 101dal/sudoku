@@ -1,3 +1,4 @@
+import copy
 from Tile import Tile
 import random
 
@@ -189,6 +190,8 @@ class SudokuGame:
         
         # First, fill the board
         self.solve_board()
+        
+        self.solved_board = copy.deepcopy(self.plateau)
 
         # Then, remove cells to create a puzzle
         diff_range = {1: [20, 30], 2:[35,45], 3: [45,55], 4: [55,60]}[difficulty]
