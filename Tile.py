@@ -1,39 +1,16 @@
 class Tile:
-    def __init__(self) -> None:
-        """Create a new tile
-        Possible variables : 
-        - value (int): the value (between 0 and 9) of the tile
-        - isStatic (bool): if the tile's value can be modified
-        - isValid (bool): if the tile is valid
-        """
-        self.value: int = 0
-        
-        self.isStatic: bool = False
-        
-        self.isValid: bool = True
-        
-    def set_validity(self, validity: bool) -> None:
-        """Set the validity of that tile
+    def __init__(self):
+        self.value = 0
+        self.isStatic = False
+        self.isValid = True
 
-        Args:
-            validity (bool): True if valid and False otherwise
-        """
+    def set_validity(self, validity):
         self.isValid = validity
 
-        return
-    
-    def set_value(self, value: int) -> bool:
-        """Sets the value of that Tile
-
-        Args:
-            value (int): The value to be set
-
-        Returns:
-            bool: True if the value has been changed and False otherwise
-        """
+    def set_value(self, value):
         if self.isStatic:
-            return True
-        
+            return
+        self.value = value
         return True
 
     def can_place_num(self, num, row, col, board):

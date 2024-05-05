@@ -3,14 +3,14 @@ from Tile import Tile
 import random
 
 class SudokuGame:
-    def __init__(self) -> None:
-        self.plateau: list[list[Tile]] = [[Tile() for _ in range(9)] for _ in range(9)]
+    def __init__(self):
+        self.plateau = [[Tile() for _ in range(9)] for _ in range(9)]
         
         return
         
 
         
-    def check_array(self, array: list[Tile]) -> bool:
+    def check_array(self, array):
         """Check if an array of Tiles is valid for checking the validity of the board
 
         Args:
@@ -47,7 +47,7 @@ class SudokuGame:
     
         
     
-    def check_board(self) -> bool:
+    def check_board(self):
         """Check if the current board position is valid or not.
         The validity is checked in two ways : first it checks if the sum is greater than 45 then it checks if there are any doubles
 
@@ -73,13 +73,13 @@ class SudokuGame:
         
         return True
     
-    def set_not_valid(self, x: int, y: int) -> bool:
+    def set_not_valid(self, x, y):
         self.plateau[y][x].isValid = False
         
         return False
     
     
-    def set_element(self, x, y, value: int) -> bool:
+    def set_element(self, x, y, value):
         """Set the value of the Tile at x and y coords to value
 
         Args:
@@ -113,7 +113,7 @@ class SudokuGame:
         
         return True
     
-    def solve_board(self, row=0, col=0) -> bool:
+    def solve_board(self, row=0, col=0):
         """Solve the Sudoku board using a backtracking algorithm.
 
         This function uses a recursive backtracking algorithm to fill the Sudoku board.
@@ -166,7 +166,7 @@ class SudokuGame:
 
         return False
 
-    def generate_game(self, difficulty: float) -> bool:
+    def generate_game(self, difficulty):
         """Function to select generate a game using the difficulty
 
         Args:
