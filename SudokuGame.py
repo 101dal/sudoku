@@ -196,7 +196,6 @@ class SudokuGame:
         # Then, remove cells to create a puzzle
         diff_range = {1: [20, 30], 2:[35,45], 3: [45,55], 4: [55,60]}[difficulty]
         cells_to_remove = random.randint(diff_range[0], diff_range[1])
-        print(cells_to_remove)
         removed_cells = 0
 
         while removed_cells < cells_to_remove:
